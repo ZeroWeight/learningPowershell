@@ -42,6 +42,10 @@ Gussing the command
 ```powershell
 Get-Command *commmand # or
 gcm *command
+
+# guess a verb
+Get-Command -verb *command # or
+gcm -verb *command
 ```
 ### parameters
 ```powershell
