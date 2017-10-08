@@ -60,6 +60,131 @@ Get-EventLog    [-LogName] <string> # mandatory
                 [-AsBaseObject]
                 [<CommonParameters>]
 ```
-N.B `LogName` is positional parameter, its value must be passed in the first position. But you do not have to actually type the `–LogName` parameter name, that part is optional.
+N.B `LogName` is positional parameter, its value 
+must be passed in the first position. But you do 
+not have to actually type the `–LogName` parameter 
+name, that part is optional.
+#### syntax
+Using `space` or `tab` as delimiter, a command should be like this
+```powershell
+Get-EventLog -LogName Application
+command/alias -para.name para.value
+```
+#### multi paras
+Some parameters accept more than one value. In the 
+Help file Syntax section, these are designated by 
+a double-square-bracket notation in the parameter 
+value type.
+```powershell
+-ComputerName <String[]>
+```
+This indicates that the `–ComputerName` parameter 
+can accept one or more string values. Use a 
+comma-separated list to specify multiple values. 
+You do not have to enclose the values in quotation 
+marks unless the values themselves contain a comma 
+or white space, such as a space or tab character
+```powershell
+Get-EventLog –ComputerName LON-CL1,LON-DC1
+```
+#### Parenthetical Commands
+There are other ways to specify multiple values 
+such as using parenthetical commands. We will 
+explore this technique in more detail later, but 
+generally it works as follows:
 
+Assume a text file includes one computer name per line:
+```
+LON-CL1
+LON-DC1
+```
+If that file was named C:\computers.txt, you could use it in a parenthetical command as follows:
+```powershell
+Get-EventLog –LogName Application –ComputerName (Get-Content C:\computers.txt)
+# the Get-Content is cat
+Get-Content filename # full name, eqs to...
+cat filename # eqs to...
+type filename 
+```
+### summary about the syntax
 
+- using alias instead of full name
+- omitting parameter names entirely for positional 
+parameters and pass only the parameter values in 
+the appropriate positions
+- typing only enough of each parameter name for the shell to determine the single parameter that you mean  
+
+for example, these 2 commands are the same
+```powershell
+Get-Service –Name BITS –ComputerName LON-DC1
+gsv BITS –Comp LON-DC1
+```
+### Using `Show-Command`
+The `Show-Command` cmdlet enables you to generate 
+commands quickly in Windows PowerShell through a 
+GUI and is a helpful learning tool if you're 
+working in the console. It is effectively the same 
+functionality as the command pane in the ISE.
+
+However, cmdlets like `Get-Help` and `Get-Command` 
+give you fuller information about the syntax, so 
+they are really better ways to learn the syntax. 
+They also provide usage scenarios and examples 
+that can help provide additional context and 
+explanation.
+
+Usage (the only usage)
+```powershell
+Show-Command -Name Get-WinEvent # OR
+Show-Command Get-WinEvent
+```
+### Using `-WhatIf` and `-Confirm`
+Running a command with the `-WhatIf` parameter 
+does not actually execute the command, but causes 
+the shell to display a message indicating what the 
+command would have done if it had executed. 
+
+The `-Confirm` parameter causes a command to pause 
+execution and ask the user whether the command 
+should continue before performing the action.
+
+Each command has an internal setting called the confirm impact that is set by the command's developer to Low, Medium, or High. Windows PowerShell provides two built-in settings, or preference variables, that you can use to control the confirm impact and confirmation behavior of a command:
+- `$ConfirmPreference`
+- `$WhatIfPreference`
+
+The default level for `$ConfirmPreference` is set 
+to High when you start a new shell session. You 
+can set `$ConfirmPreference` to Low or Medium, but 
+that setting is preserved **only for the current 
+shell session**.
+
+When the command runs, Windows PowerShell checks 
+its internal confirm impact level and if that 
+level is **equal to or higher** than your 
+`$ConfirmPreference` setting, Windows PowerShell 
+performs the confirmation action automatically.
+
+Therefore, to have the command prompt you to 
+continue or halt execution, set the 
+`$ConfirmPreference` preference to be less than 
+the command's confirm impact. For example, if the 
+internal confirm impact is set to Medium, you 
+would set $ConfirmPreference as follows:
+```powershell
+$ConfirmPreference = "Low" 
+```
+For commands that have a **High** internal confirm 
+impact, the default behavior is to auto-confirm 
+and you will not be prompted to confirm how you 
+want the command to execute. You can override this 
+by specifying `-Confirm:$false`.
+
+To view the current values of the `-Whatif` or 
+`-Confirm` preference variables you can simply 
+type `$ConfirmPreference` or `$WhatifPreference` 
+at the console. 
+
+View more details in the Help file by typing 
+```powershell
+help about_preference_variables -showwindow`
+```
