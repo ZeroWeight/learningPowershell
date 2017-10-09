@@ -192,3 +192,32 @@ View more details in the Help file by typing
 ```powershell
 help about_preference_variables -showwindow`
 ```
+## Pipeline
+### What is pipeline
+Windows PowerShell runs commands in a pipeline. 
+```powershell
+Get-Service # single-command pipeline.
+
+# multi-command pipeline.
+Get-Service | Out-File ServiceList.txt # eqs to
+Get-Service `
+>>  Out-File ServiceList.txt
+# type a single logical command line over multiple 
+physical lines
+```
+### Objects
+Most Windows PowerShell commands do not generate 
+files or text as output. Instead, they generate 
+**objects**. Object is a generic word that 
+describes a kind of in-memory data structure.
+
+The properties of object are referred to as 
+**members**, some of the members of the object will be shown on screen. Using `Get-Members` to 
+show the members of the object returned by pipeline
+
+For example, this will show all of the member of 
+the object output by pipeline
+```powershell
+Get-Service | Get-Member
+```
+Using `Where-Object` (alias `where`) to locate a certain object
