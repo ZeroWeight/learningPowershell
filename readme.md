@@ -309,7 +309,7 @@ a subset of objects. Here are some examples.
 Get-Process | Sort-Object -Property VM | Select-Object -Last 10
 # 5 processes using the most amount of CPU
 # but skipping the one process using the most CPU:
-Get-Process | Sort -Property CPU -Descending | Select -First 5 -Skip 1
+Get-Process | Sort-Object -Property CPU -Descending | Select -First 5 -Skip 1
 ```
 ### Selecting Properties of an Object 
 Use ``Select-Object`` to select specified properties to display.
