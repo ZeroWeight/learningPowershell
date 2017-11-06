@@ -243,7 +243,7 @@ Get-Service | Get-Member | Get-Member | Get-Member
 
 Other useful commands using pipeline
 ```powershell
-| format-table -wrap | OutputFile ""
+| format-table -wrap | Out-File ""
 ```
 ### Sorted Objects
 Using ``Sort-Object``(alias ``Sort``) to sort the object by 
