@@ -203,7 +203,7 @@ Get-Service | Out-File ServiceList.txt # eqs to
 Get-Service `
 >>  Out-File ServiceList.txt
 # type a single logical command line over multiple 
-physical lines
+# physical lines
 ```
 ### Objects
 Most Windows PowerShell commands do not generate 
@@ -221,3 +221,50 @@ the object output by pipeline
 Get-Service | Get-Member
 ```
 Using `Where-Object` (alias `where`) to locate a certain object
+The properties of object are referred to as 
+**members**, some of the members of the object will be shown on screen. Using `Get-Members` to 
+show the members of the object returned by pipeline
+
+For example, this will show all of the member of 
+the object output by pipeline
+```powershell
+Get-Service | Get-Member
+```
+Using `Where-Object` (alias `where`) to locate a certain object
+
+Try these interesting commands
+```powershell
+Get-Service | Where-Object Status -eq "Stop"
+Get-Service | Get-Member
+Get-Service | Get-Member | Get-Member 
+Get-Service | Get-Member | Where-Object MemberType -eq "Method" 
+Get-Service | Get-Member | Get-Member | Get-Member
+```
+
+Other useful commands using pipeline
+```powershell
+| format-table -wrap | OutputFile ""
+```
+### Sorted Objects
+Using ``Sort-Object``(alias ``Sort``) to sort the object by 
+``-Property``, using ``-Desc`` to sort the objects in descending
+order, for examples
+
+```powershell
+Get-Service | Sort -Property Status # -Property can be omited
+Get-Service | Sort Status, Name # sort for 2 or more properties
+Get-Service | Sort -Desc
+```
+
+Using the ``hash table`` to sort one property in ascending order
+and another property in descending order, for example:
+```powershell
+Get-Service `
+Sort-Object -Property @{Expression = "Status"; Descending = $True}, @{Expression = "DisplayName"; Descending = $False}
+```
+
+By default, string properties are sorted without regard to case. 
+However, parameters of Sort-Object enable you to specify a case-sensitive sort, 
+a specific culture’s sorting rules, and other options. Refer to ``man Sort-Object``
+
+**NOTICE THAT THE OBJECTS ARE PASSED THROUGH THE PIPELINE**
