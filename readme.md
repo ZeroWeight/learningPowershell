@@ -64,7 +64,7 @@ Get-EventLog    [-LogName] <string> # mandatory
                 [-AsBaseObject]
                 [<CommonParameters>]
 ```
-N.B `LogName` is positional parameter, its value 
+N.B. `LogName` is positional parameter, its value 
 must be passed in the first position. But you do 
 not have to actually type the `–LogName` parameter 
 name, that part is optional.
@@ -268,3 +268,62 @@ However, parameters of Sort-Object enable you to specify a case-sensitive sort,
 a specific culture’s sorting rules, and other options. Refer to ``man Sort-Object``
 
 **NOTICE THAT THE OBJECTS ARE PASSED THROUGH THE PIPELINE**
+
+### Measuring Objects
+``Measure-Object`` (alias ``Measure``) command counts the number 
+of objects in the collection and produces a measurement object 
+that includes the count. The command can accept any kind of 
+object in a collection
+
+For example, we use ``Measure-Object`` to count the number of 
+services using the code below
+```powershell
+Get-Service | Measure-Object
+```
+``-Property`` parameter that enables you to specify a single
+property that must contain numeric values. The ``-Average``,
+``-Minimum``, ``-Maximum``, or ``-Sum`` parameters to calculate
+those aggregate values for the specified property. 
+
+E.g. the code below will calculate the average amount of virtual 
+memory (VM) that the machine processes are using.
+```powershell
+Get-Process | Measure-Object –Property VM –Average
+Get-Process | Measure-Object –Property CPU –Average -SUM # CPU state
+```
+
+N.B. the code below show all of the properties of the objects
+passed by pipeline
+```powershell
+| Get-Member | Where-Object MemberType -eq "Property"
+```
+
+See ``man Measure-Object`` for more information.
+
+### Selecting Objects
+Using ``Select-Object`` (alias ``Select``) to select 
+a subset of objects. Here are some examples.
+
+```powershell
+# First 10 processes based on the highest virtual memory usage:
+Get-Process | Sort-Object -Property VM | Select-Object -Last 10
+# 5 processes using the most amount of CPU
+# but skipping the one process using the most CPU:
+Get-Process | Sort -Property CPU -Descending | Select -First 5 -Skip 1
+```
+### Selecting Properties of an Object 
+Use ``Select-Object`` to select specified properties to display.
+Other properties will be removed
+
+Here are some codes finding only the ``Name`` and ``MemberType``
+in ``Get-Process`` and using ``Select-Object`` to shorten the list
+```powershell
+Get-Process | Get-Member 
+#Use Sort-Object to sort the output alphabetically by Name.
+Get-Process | Get-Member | Sort-Object -Property Name
+# Display only the Name and MemberType. 
+Get-Process | Get-Member | Sort-Object -Property Name | Select-Object Name,MemberType
+# Use Select-Object to shorten the list.
+Get-Process | Get-Member | Sort-Object -Property Name | Select-Object Name,MemberType | Select-Object -First 15
+```
+*The output format might be odd using the default format*
